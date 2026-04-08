@@ -21,4 +21,117 @@ The pipeline integrates CRM and ERP datasets, applies transformations using **Ap
 
 ## Architecture
 
+``` Bronze Layer  →  Silver Layer  →  Gold Layer ```
+
+### Bronze Layer
+
+- Stores raw ingested data
+- No transformations applied
+- Serves as the source of truth
+
+### Silver Layer
+
+- Data cleansing and standardization
+- Integration of CRM and ERP datasets
+- Handling of missing and inconsistent data
+
+### Gold Layer
+
+- Business-level data modeling which is optimized for analytics and BI tool
+
+---
+
+## Tech Stack
+
+- Databricks  
+- Apache Spark (PySpark & Spark SQL)  
+- Delta Lake  
+- Python  
+- SQL  
+
+---
+
+## Data Modeling
+
+The Gold layer implements a **star schema**:
+
+### Dimension Tables
+- `dim_customers`: Customer attributes  
+- `dim_products`: Product and category details  
+
+### Fact Table
+- `fact_sales`:
+  - Measures: `sales_amount`, `quantity`, `price`  
+  - Foreign Keys: `customer_key`, `product_key`  
+  - Dates: `order_date`, `ship_date`, `due_date`  
+
+Surrogate keys are generated using window functions:
+
+```sql
+ROW_NUMBER() OVER (ORDER BY start_date, product_number) AS product_key
+```
+
+---
+
+## Data Storage
+
+All tables are stored in Delta Lake format:
+
+``` df.write.mode("overwrite").format("delta").saveAsTable("schema.table") ```
+
+### Benefits
+
+- ACID transactions
+- Schema enforcement
+- Time travel capabilities
+- Scalable data storage
+
+---
+
+## Pipeline Orchestration
+
+
+Workflows are orchestrated using Databricks notebooks:
+
+- Bronze Layer Orchestration
+  - Executes the notebook for the raw datasets
+  
+- Silver Layer Orchestration
+  - Executes all transformation notebooks for cleaned datasets
+
+- Gold Layer Orchestration
+  - Builds dimension and fact tables
+
+Execution is automated using:
+
+``` python
+dbutils.notebook.run(notebook_path, timeout_seconds=0)
+```
+
+---
+
+## Project Structure
+
+
+
+---
+
+## Use Cases
+- Sales performance analysis
+- Customer behavior analysis
+- Product performance tracking
+- Business intelligence dashboards (Power BI, Tableau)
+
+---
+
+## Key Highlights
+- End-to-end pipeline from raw data to analytics-ready datasets
+- Implementation of Medallion Architecture
+- Scalable data processing using Spark
+- Structured data modeling with star schema
+- Modular and reusable notebook orchestration
+
+
+
+
 
