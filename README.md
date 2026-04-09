@@ -90,7 +90,8 @@ All tables are stored in Delta Lake format:
 
 ## Pipeline Orchestration
 
-![Pipeline](bike_data_lakehouse/images/pipeline.png)
+![Pipeline](bike%20data%20lakehouse/images/pipeline.png)
+<img width="1005" height="140" alt="pipeline" src="https://github.com/user-attachments/assets/ec116575-1b81-4ad0-9395-1d167565252f" />
 
 Workflows are orchestrated using Databricks notebooks:
 
